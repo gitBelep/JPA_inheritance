@@ -1,37 +1,38 @@
 package tracker;
 
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
+import javax.persistence.*;
 import java.time.LocalDateTime;
 
 @Entity
+@Inheritance(strategy = InheritanceType.JOINED)
 public class Activity {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO) //IDENTITY nem lehet öröklődésnél
-    private long id;
+    private long actId;
 
     private LocalDateTime startTime;
 
-    private String desc;
+    private LocalDateTime writingTime;
+
+    @Column(name="description", nullable = false, length = 200)
+    private String description;
 
 
     public Activity() {
     }
 
-    public Activity(LocalDateTime startTime, String desc) {
+    public Activity(LocalDateTime startTime, String description) {
         this.startTime = startTime;
-        this.desc = desc;
+        this.description = description;
     }
 
 
-    public long getId() {
-        return id;
+    public long getActId() {
+        return actId;
     }
 
-    public void setId(long id) {
-        this.id = id;
+    public void setActId(long actId) {
+        this.actId = actId;
     }
 
     public LocalDateTime getStartTime() {
@@ -42,11 +43,20 @@ public class Activity {
         this.startTime = startTime;
     }
 
-    public String getDesc() {
-        return desc;
+    public LocalDateTime getWritingTime() {
+        return writingTime;
     }
 
-    public void setDesc(String desc) {
-        this.desc = desc;
+    public void setWritingTime(LocalDateTime writingTime) {
+        this.writingTime = writingTime;
     }
+
+    public String getDescription() {
+        return description;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
+    }
+
 }
