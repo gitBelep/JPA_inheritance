@@ -97,6 +97,20 @@ public class ActivityTrackerDao {
         return result;
     }
 
-
+    public List<Coordinate> findCoordinatesByStreamAfterDate(LocalDateTime afterThis, int start, int max){
+        EntityManager em = emf.createEntityManager();
+        List<Coordinate> result = em.createQuery(
+                "select t from ActivityWithTrack t join t.coordinates", ActivityWithTrack.class)
+                .getResultStream()
+                .filter(t -> t.getStartTime().isAfter(afterThis))
+                .map(ActivityWithTrack::getCoordinates)
+                .flatMap(c -> c.stream())
+                .skip(start)
+                .limit(max)
+                .distinct()   //WHY is it necessary??
+                .collect(Collectors.toList());
+        em.close();
+        return result;
+    }
 
 }

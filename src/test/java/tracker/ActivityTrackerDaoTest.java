@@ -136,5 +136,31 @@ public class ActivityTrackerDaoTest {
         assertEquals(1, coos2.size());
     }
 
-   
+    @Test
+    public void testStreamSelectCoordinatesAfterADate() {
+        dao.saveActivity(new ActivityWithTrack(LocalDateTime.of(2020, 2, 7, 7, 7, 0), "Trükős", 55.72, 7027));
+        dao.saveActivity(new ActivityWithTrack(LocalDateTime.of(2021, 3, 7, 7, 7, 0), "Türkök", 55.73, 7037));
+        Coordinate c1 = new Coordinate(1.1, 1.1);
+        Coordinate c2 = new Coordinate(1.2, 1.2);
+        Coordinate c3 = new Coordinate(1.3, 1.3);
+        Coordinate c4 = new Coordinate(1.4, 1.4);
+
+        Activity aa1 = dao.findActivityByDesc("Trükős");
+        Activity aa2 = dao.findActivityByDesc("Trükkös2");
+        Activity aa4 = dao.findActivityByDesc("Türkök");
+
+        dao.addCoordinate(c1, aa1.getActId());
+        dao.addCoordinate(c2, aa1.getActId());
+        dao.addCoordinate(c3, aa2.getActId());
+        dao.addCoordinate(c4, aa4.getActId());
+
+        //3 Coordinates: (c1, c2), (c4)
+        List<Coordinate> coos1 = dao.findCoordinatesByStreamAfterDate(LocalDateTime.of(2020,1,1,1,1,0), 0,40);
+         //1 Coordinate: (c4)
+        List<Coordinate> coos2 = dao.findCoordinatesByStreamAfterDate(LocalDateTime.of(2021,1,1,1,1,0), 0,40);
+
+        assertEquals(1, coos2.size());
+        assertEquals(3, coos1.size());
+    }
+    
 }
