@@ -3,7 +3,11 @@ package tracker;
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
+import java.util.function.Predicate;
+import java.util.stream.Collector;
+import java.util.stream.Collectors;
 
 public class ActivityTrackerDao {
     private final EntityManagerFactory emf;
@@ -56,13 +60,43 @@ public class ActivityTrackerDao {
     public ActivityWithTrack findActivityWithCoordinateByDesc(String text){
         EntityManager em = emf.createEntityManager();
         String likeText = "%"+ text + "%";
-        Activity a = em.createQuery(
-                "select a from Activity a join fetch a.coordinates where a.description like :text", Activity.class)
+        ActivityWithTrack a = em.createQuery(
+                "select a from ActivityWithTrack a join fetch a.coordinates where a.description like :text", ActivityWithTrack.class)
                 .setParameter("text", likeText)
                 .getSingleResult();
         em.close();
-        return (ActivityWithTrack) a;
+        return a;
     }
+
+    public List<Coordinate> findCoordinatesByActivityDate(LocalDateTime afterThis, int start, int max){
+        EntityManager em = emf.createEntityManager();
+        List<Coordinate> result = em.createQuery(
+// false:
+// "select a from ActivityWithTrack a where a.startTime > :date", ActivityWithTrack.class)
+// "select Coordinate from ActivityWithTrack.coordinates join fetch coordinates where ActivityWithTrack.startTime > :date", Coordinate.class)
+// "select Coordinate from ActivityWithTrack t join fetch t.coordinates where t.startTime > :date", Coordinate.class)
+// "select c from Coordinate c join fetch Activity t where t.startTime > :date", Coordinate.class)
+// "select c from ActivityWithTrack t join fetch t.coordinates c where t.startTime > :date", Coordinate.class)
+        "select c from ActivityWithTrack t join t.coordinates c where t.startTime > :date", Coordinate.class)
+                .setParameter("date", afterThis)
+                .setFirstResult(start)
+                .setMaxResults(max)
+                .getResultList();
+        em.close();
+        return result;
+    }
+
+    public List<Coordinate> findCoordinatesByNamedQueryAfterDate(LocalDateTime afterThis, int start, int max){
+        EntityManager em = emf.createEntityManager();
+        List<Coordinate> result = em.createNamedQuery("coordinatesAfterGivenActivityDate", Coordinate.class)
+                .setParameter("date", afterThis)
+                .setFirstResult(start)
+                .setMaxResults(max)
+                .getResultList();
+        em.close();
+        return result;
+    }
+
 
 
 }

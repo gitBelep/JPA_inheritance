@@ -5,6 +5,7 @@ import java.time.LocalDateTime;
 
 @Entity
 @Inheritance(strategy = InheritanceType.JOINED)
+@NamedQuery(name = "coordinatesAfterGivenActivityDate", query = "select c from ActivityWithTrack t join t.coordinates c where t.startTime > :date")
 public class Activity {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO) //IDENTITY nem lehet öröklődésnél

@@ -9,6 +9,7 @@ public class Coordinate {
     @TableGenerator(name = "CoordinateIdGenerator", table = "coo_id_gen",
             pkColumnName = "coo_id_gen", valueColumnName = "coo_id_val")
     @GeneratedValue(generator = "CoordinateIdGenerator")
+//   with .AUTO did NOT worked
     private long coo_id;
 
     @Column(name = "latitude")
@@ -30,7 +31,7 @@ public class Coordinate {
         this.lon = lon;
     }
 
-
+//   just for testing
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
@@ -42,6 +43,11 @@ public class Coordinate {
     @Override
     public int hashCode() {
         return Objects.hash(lat, lon);
+    }
+
+    @Override
+    public String toString() {
+        return coo_id +", lat="+ lat +", lon="+ lon;
     }
 
     public long getCoo_id() {
