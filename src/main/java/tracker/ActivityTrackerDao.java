@@ -113,4 +113,13 @@ public class ActivityTrackerDao {
         return result;
     }
 
+    public List<CoordinateDTO> listCoordinateDTO(){
+         EntityManager em = emf.createEntityManager();
+        List<CoordinateDTO> result = em.createQuery(
+                "select new tracker.CoordinateDTO(c.lat, c.lon) from Coordinate c order by c.id")
+                .getResultList();
+        em.close();
+        return result;
+    }
+
 }

@@ -162,5 +162,23 @@ public class ActivityTrackerDaoTest {
         assertEquals(1, coos2.size());
         assertEquals(3, coos1.size());
     }
-    
+
+    @Test
+    public void testListCoordinateDTO(){
+        Coordinate c1 = new Coordinate(1.1, 1.1);
+        Coordinate c2 = new Coordinate(1.2, 1.2);
+        Coordinate c3 = new Coordinate(1.3, 1.3);
+        Coordinate c4 = new Coordinate(1.4, 1.4);
+
+        Activity aa = dao.findActivityByDesc("Trükkös2");
+        dao.addCoordinate(c1, aa.getActId());
+        dao.addCoordinate(c2, aa.getActId());
+        dao.addCoordinate(c3, aa.getActId());
+        dao.addCoordinate(c4, aa.getActId());
+
+        List<CoordinateDTO> c = dao.listCoordinateDTO();
+        assertEquals(4, c.size());
+        assertEquals(1.3, c.get(2).getLatitude(),0.01);
+    }
+
 }
