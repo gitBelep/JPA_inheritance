@@ -122,4 +122,14 @@ public class ActivityTrackerDao {
         return result;
     }
 
+    public List<CoordinateDTO> listCoordinateDTOAfterDate(LocalDateTime afterThis){
+        EntityManager em = emf.createEntityManager();
+        List<CoordinateDTO> result = em.createQuery(
+                "select new tracker.CoordinateDTO(c.lat, c.lon) from Coordinate c where c.cooActivity.startTime > :date order by c.id")
+                .setParameter("date", afterThis)
+                .getResultList();
+        em.close();
+        return result;
+    }
+
 }

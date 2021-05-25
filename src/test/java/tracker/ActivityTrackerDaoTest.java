@@ -181,4 +181,26 @@ public class ActivityTrackerDaoTest {
         assertEquals(1.3, c.get(2).getLatitude(),0.01);
     }
 
+    @Test
+    public void testListCoordinateDTOAfterDate(){
+        dao.saveActivity(new ActivityWithTrack(LocalDateTime.of(2021, 2, 7, 7, 7, 0), "Tr2021", 55.72, 7027));
+        Coordinate c1 = new Coordinate(1.1, 1.1);
+        Coordinate c2 = new Coordinate(1.2, 1.2);
+        Coordinate c3 = new Coordinate(1.3, 1.3);
+        Coordinate c4 = new Coordinate(1.4, 1.4);
+
+        Activity aa2018 = dao.findActivityByDesc("Trükkös2");
+        Activity aa2021 = dao.findActivityByDesc("Tr2021");
+
+        dao.addCoordinate(c1, aa2018.getActId());
+        dao.addCoordinate(c2, aa2021.getActId());
+        dao.addCoordinate(c3, aa2018.getActId());
+        dao.addCoordinate(c4, aa2021.getActId());
+
+        List<CoordinateDTO> c = dao.listCoordinateDTOAfterDate(LocalDateTime.of(2019,2,2,2,2,0));
+        //System.out.println(c.get(0).getLatitude() +" "+c.get(1).getLongitude());  //1.2, 1.4
+        assertEquals(2, c.size());
+        assertEquals(1.2, c.get(0).getLatitude(),0.01);
+    }
+
 }
