@@ -11,8 +11,8 @@ public class SimpleActivitySpecial extends SimpleActivity{
     public SimpleActivitySpecial() {
         }
 
-    public SimpleActivitySpecial(LocalDateTime startTime, String description, String place, String special) {
-        super(startTime, description, place);
+    public SimpleActivitySpecial(LocalDateTime startTime, String description, ActivityType type, String place, String special) {
+        super(startTime, description, type, place);
         this.special = special;
     }
 

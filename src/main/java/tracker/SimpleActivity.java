@@ -13,8 +13,8 @@ public class SimpleActivity extends Activity{
     public SimpleActivity() {
     }
 
-    public SimpleActivity(LocalDateTime startTime, String description, String place) {
-        super(startTime, description);
+    public SimpleActivity(LocalDateTime startTime, String description, ActivityType type, String place) {
+        super(startTime, description, type);
         this.place = place;
     }
 

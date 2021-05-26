@@ -18,13 +18,16 @@ public class Activity {
     @Column(name="description", nullable = false, length = 200)
     private String description;
 
+    private ActivityType type;
+
 
     public Activity() {
     }
 
-    public Activity(LocalDateTime startTime, String description) {
+    public Activity(LocalDateTime startTime, String description, ActivityType type) {
         this.startTime = startTime;
         this.description = description;
+        this.type = type;
     }
 
 
