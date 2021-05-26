@@ -54,8 +54,8 @@ public class ActivityTrackerDaoTest {
         Activity a5 = dao.findActivityByDesc("Speck");
 
         assertEquals("Trükős", a3.getDescription());
-        assertEquals(7, ( (ActivityWithTrack)a3 ).getStartTime().getMinute());
-        assertEquals(2018, ((SimpleActivity)a2).getStartTime().getYear());
+        assertEquals(7, a3.getStartTime().getMinute());    //(ActivityWithTrack)
+        assertEquals(2018, a2.getStartTime().getYear());   //(SimpleActivity)
         assertEquals("Bécs", ((SimpleActivity)a1).getPlace());
         assertEquals("A közeli ABC-be mentem", a4.getDescription());
         assertEquals("Feriékkel", ((SimpleActivitySpecial)a5).getSpecial() );
@@ -230,8 +230,8 @@ public class ActivityTrackerDaoTest {
         assertEquals("Tr2020", result.get(2)[0].toString());
 
         for(Object[] o : result){
-            System.out.print( Arrays.toString(o) +" ");         //it also works with String & Long
-            System.out.println( o[0].toString() +" ~ "+ (Long) o[1] );
+            System.out.print( Arrays.toString(o) +" ");          //it also works with String & Long
+            System.out.println( o[0].toString() +" ~ "+ o[1] );  //it is redundant to cast to Long
         }
     }
 

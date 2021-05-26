@@ -63,4 +63,11 @@ public class Activity {
         this.description = description;
     }
 
+    public ActivityType getType() {
+        return type;
+    }
+
+    public void setType(ActivityType type) {
+        this.type = type;
+    }
 }
