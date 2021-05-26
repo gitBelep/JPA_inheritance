@@ -3,10 +3,7 @@ package tracker;
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
 import java.time.LocalDateTime;
-import java.util.ArrayList;
 import java.util.List;
-import java.util.function.Predicate;
-import java.util.stream.Collector;
 import java.util.stream.Collectors;
 
 public class ActivityTrackerDao {
@@ -45,6 +42,15 @@ public class ActivityTrackerDao {
                 .getSingleResult();
         em.close();
         return a;
+    }
+
+    public List<Activity> listActivities(){
+        EntityManager em = emf.createEntityManager();
+        List<Activity> az = em.createQuery(
+                "select a from Activity a", Activity.class)
+                .getResultList();
+        em.close();
+        return az;
     }
 
     public void addCoordinate(Coordinate coordinate, long id){
@@ -107,7 +113,7 @@ public class ActivityTrackerDao {
                 .flatMap(c -> c.stream())
                 .skip(start)
                 .limit(max)
-                .distinct()   //WHY is it necessary??
+                .distinct()   //WHY is it necessary?? (Both: Activity & Coordi will be selected?)
                 .collect(Collectors.toList());
         em.close();
         return result;
@@ -132,4 +138,34 @@ public class ActivityTrackerDao {
         return result;
     }
 
+    public List<Object[]> findCoordinateCountByActivityDescription(){
+        EntityManager em = emf.createEntityManager();
+        List<Object[]> result = em.createQuery(
+        "select t.description, count(c) from ActivityWithTrack t join t.coordinates c group by t.description order by t.description desc")
+        .getResultList();
+        em.close();
+        return result;
+    }
+
+    public void removeActivitiesByDateAndType(LocalDateTime afterThis, ActivityType type){
+        EntityManager em = emf.createEntityManager();
+        em.getTransaction().begin();
+        em.createQuery(
+            "delete Activity a where a.type = :type and a.startTime >= :afterThis")
+            .setParameter("type", type)
+            .setParameter("afterThis", afterThis)
+            .executeUpdate();
+        em.getTransaction().commit();
+        em.close();
+    }
+
+    public List<Activity> listActivitiesByType(ActivityType type){
+        EntityManager em = emf.createEntityManager();
+        List<Activity> result = em.createQuery(
+                "select a from Activity a where type = :type", Activity.class)
+                .setParameter("type", type)
+                .getResultList();
+        em.close();
+        return result;
+    }
 }
