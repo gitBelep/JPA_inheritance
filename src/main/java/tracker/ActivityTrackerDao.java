@@ -77,13 +77,9 @@ public class ActivityTrackerDao {
     public List<Coordinate> findCoordinatesByActivityDate(LocalDateTime afterThis, int start, int max){
         EntityManager em = emf.createEntityManager();
         List<Coordinate> result = em.createQuery(
-// false:
-// "select a from ActivityWithTrack a where a.startTime > :date", ActivityWithTrack.class)
-// "select Coordinate from ActivityWithTrack.coordinates join fetch coordinates where ActivityWithTrack.startTime > :date", Coordinate.class)
-// "select Coordinate from ActivityWithTrack t join fetch t.coordinates where t.startTime > :date", Coordinate.class)
-// "select c from Coordinate c join fetch Activity t where t.startTime > :date", Coordinate.class)
-// "select c from ActivityWithTrack t join fetch t.coordinates c where t.startTime > :date", Coordinate.class)
-        "select c from ActivityWithTrack t join t.coordinates c where t.startTime > :date", Coordinate.class)
+// it is working, but..:
+// "select c from ActivityWithTrack t join t.coordinates c where t.startTime > :date", Coordinate.class)
+        "select c from Coordinate c where c.cooActivity.startTime > :date", Coordinate.class)
                 .setParameter("date", afterThis)
                 .setFirstResult(start)
                 .setMaxResults(max)
